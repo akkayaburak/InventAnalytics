@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace InventAnalytics.Entities
+namespace InventAnalytics.DTOs
 {
-    public class InventorySales
+    public class UpdateSaleDto
     {
-        public int Id { get; set; }
+        public string DateStr { get { return Date.ToString("yyyy-MM-dd"); } }
         public int ProductId { get; set; }
         public int StoreId { get; set; }
         public DateTime Date { get; set; }
-        public int SalesQuantity { get; set; }
+        public int SaleQuantity { get; set; }
         public int Stock { get; set; }
     }
 }

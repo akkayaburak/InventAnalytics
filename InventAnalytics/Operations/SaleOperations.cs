@@ -53,13 +53,46 @@ namespace InventAnalytics.Operations
         
         public async Task Delete(int id)
         {
-            var statement = @$"DELETE FROM InventorySales ISA WHERE ISA.Id = {id}";
+            var statement = @$"DELETE FROM InventorySales WHERE InventorySales.Id = {id}";
 
             var con = _context.Open();
 
             SqlCommand command = new(statement, con);
 
             await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task Update(UpdateSaleDto updateSaleDto, int id)
+        {
+            var statement = @$"UPDATE InventorySales SET ProductId = {updateSaleDto.ProductId} , StoreId = {updateSaleDto.StoreId} , Date = '{updateSaleDto.DateStr}' , SalesQuantity = {updateSaleDto.SaleQuantity}, Stock = {updateSaleDto.Stock}
+                               WHERE Id = {id}";
+            var con = _context.Open();
+
+            SqlCommand command = new(statement, con);
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task<ProductModel> BestSellerProduct()
+        {
+            var statement = @$"SELECT * FROM Products P WHERE P.Id = (SELECT TOP 1 ProductId FROM InventorySales
+                               WHERE SalesQuantity > 0
+                               GROUP BY ProductId
+                               ORDER BY SUM(SalesQuantity) DESC)";
+
+            var con = _context.Open();
+            SqlCommand command = new(statement, con);
+
+            ProductModel productModel = new();
+            using var reader = await command.ExecuteReaderAsync();
+            while(await reader.ReadAsync())
+            {
+                productModel.Id = reader.GetInt32(0);
+                productModel.ProductName = reader.GetString(1);
+                productModel.Cost = reader.GetInt32(2);
+                productModel.SalesPrice = reader.GetInt32(3);
+            }
+            return productModel;
         }
     }
 }

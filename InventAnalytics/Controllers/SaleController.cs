@@ -1,6 +1,5 @@
 ﻿using InventAnalytics.DTOs;
 using InventAnalytics.Operations;
-using InventAnalytics.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -51,6 +50,35 @@ namespace InventAnalytics.Controllers
             {
                 await _saleOperations.Delete(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(UpdateSaleDto updateSaleDto, int id)
+        {
+            try
+            {
+                await _saleOperations.Update(updateSaleDto, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("BestSellerProduct")]
+        public async Task<IActionResult> BestSellerProduct()
+        {
+            try
+            {
+                return Ok(await _saleOperations.BestSellerProduct());
             }
             catch (Exception ex)
             {

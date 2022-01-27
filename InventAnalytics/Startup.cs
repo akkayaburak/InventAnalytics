@@ -31,6 +31,7 @@ namespace InventAnalytics
             services.AddScoped<IDataContext, DataContext>();
 
             services.AddTransient<SaleOperations>();
+            services.AddTransient<StoreOperations>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
