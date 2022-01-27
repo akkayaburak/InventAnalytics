@@ -153,6 +153,8 @@ namespace InventAnalytics.Helpers
                                ;
                 sqlCommand.CommandText = statement;
                 await sqlCommand.ExecuteNonQueryAsync();
+
+                con.Close();
             }
         }
     }
